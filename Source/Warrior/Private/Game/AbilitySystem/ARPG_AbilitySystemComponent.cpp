@@ -2,6 +2,7 @@
 
 
 #include "Game/AbilitySystem/ARPG_AbilitySystemComponent.h"
+#include "Game/AbilitySystem/Abilities/ARPG_HeroGameplayAbility.h"
 
 void UARPG_AbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInputTag)
 {
@@ -20,4 +21,24 @@ void UARPG_AbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InI
 
 void UARPG_AbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InInputTag)
 {
+}
+
+void UARPG_AbilitySystemComponent::GrantHeroWeaponAbilities(const TArray<FARPG_HeroAbilitySet>& InDefaultWeaponAbilities, int32 ApplyLevel, TArray<FGameplayAbilitySpecHandle>& OutGrantedAbilitySpecHandles)
+{
+	if (InDefaultWeaponAbilities.IsEmpty())
+	{
+		return;
+	}
+
+	for (const FARPG_HeroAbilitySet& AbilitySet : InDefaultWeaponAbilities)
+	{
+		if(!AbilitySet.IsValid()) continue;
+
+		FGameplayAbilitySpec AbilitySpec(AbilitySet.AbilityToGrant);
+		AbilitySpec.SourceObject = GetAvatarActor();
+		AbilitySpec.Level = ApplyLevel;
+		AbilitySpec.DynamicAbilityTags.AddTag(AbilitySet.InputTag);
+
+		OutGrantedAbilitySpecHandles.AddUnique(GiveAbility(AbilitySpec));
+	}
 }
