@@ -36,6 +36,7 @@ bool UARPG_FunctionLibrary::NativeDoesActorHaveTag(AActor* InActor, FGameplayTag
 {
 	UARPG_AbilitySystemComponent* ASC = NativeGetARPG_ASCFromActor(InActor);
 
+
 	return ASC->HasMatchingGameplayTag(TagToCheck);
 }
 
